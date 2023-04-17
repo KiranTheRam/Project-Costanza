@@ -5,9 +5,9 @@ import time
 # Open the serial port
 ser = serial.Serial('\\\\.\\COM10', 115200, timeout=0.15)
 
-device_id = "50514a231092e6c14803486692b3974f6a20aca5"
+device_id = "[your device id here]"
 
-token = "BQD4N7u7DzyOcFk3PZYNUwY8NuPYL0kd1iiAXnWZuyvYZE__VJuTQ1H7y_aLWY0iqW5Lbr_akUAZobSLFwEMqtavwc4q2CYNkQRTNX6hLfSVb-quYSOUw8XWwduZaXspmRYlTbcYe7MFgaox7gOOA_XGwlxPMEVFnC1CASbYAy_i5v4IUafs_FEVtuRDFYTKU1YN2XgysXS2fDJiBNPAKDO7l5uWlAFGJkTtEGbQqopZmI7TGzDTkJ65Jg0A9I2y0lkBHlAeYiUwYkw99bBQPr4s4WT784zzZL3xOVm1dIHqwKPy97RTRrHrkITPyfXN5lOOG8CR04WqOgJDT14p2kDQy8C8LEs21h2b6pttBKjq6Tc"
+token = "[yur token here]"
 
 
 def play():

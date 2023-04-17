@@ -1,0 +1,109 @@
+import serial
+import requests
+import time
+import json
+
+# Open the serial port
+ser = serial.Serial('\\\\.\\COM10', 115200, timeout=0.15)
+
+device_id = "[your device id]"
+client_id = "[your client id]"
+client_secret = "[your client secret]"
+
+
+def get_token():
+    url = "https://accounts.spotify.com/api/token"
+
+    data = {
+        "grant_type": "client_credentials",
+        "client_id": "[your client id]",
+        "client_secret": "[your client secret]"
+    }
+
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+
+    response = requests.post(url, data=data, headers=headers)
+
+    # print("response", response.json())
+    print("response code", response.status_code)
+
+    resp = json.loads(response.text)
+    print(resp)
+    return resp['access_token']
+
+
+token = get_token()
+
+def play():
+    url = f"https://api.spotify.com/v1/me/player/play?device_id={device_id}"
+
+    data = {
+        # "context_uri": "spotify:artist:6wyLmoC7u1PG52QcUvlbTf",
+        # "offset": {
+        # "uri": "spotify:artist:6wyLmoC7u1PG52QcUvlbTf",
+        # "position": 0,
+        # },
+        "position_ms": 0
+    }
+
+    headers = {
+        "Authorization": "Bearer " + token,
+        "Content-Type": "application/json"
+    }
+
+    response = requests.put(url, json=data, headers=headers)
+
+    print("response code", response.status_code)
+    print("response", response.text)
+
+
+def pause():
+    url = f"https://api.spotify.com/v1/me/player/pause"
+
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.put(url, json={}, headers=headers)
+
+    print("response code", response.status_code)
+
+
+def sensor_val():
+    data = ser.read(100).split(b'\n')
+    data = data[len(data) - 2]
+    data = data.rstrip()
+    return int(data)
+
+
+# Read and print the data from the serial port
+playing = False
+playingTime = time.time()
+while True:
+    if ser.inWaiting() > 0:
+        val = sensor_val()
+        print(val, time.time())
+        if val < 780:
+            if not playing:
+                print("playing ", time.time())
+                play()
+                playing = True
+                playingTime = time.time()
+        else:
+            if playing:
+                print("checking pause", time.time())
+                if time.time() - playingTime >= 5:
+                    print("pausing", time.time())
+                    pause()
+                    playing = False
+        time.sleep(0.15)
+    if playing:
+        print("checking pause", time.time())
+        if time.time() - playingTime >= 5:
+            print("pausing", time.time())
+            pause()
+            playing = False
+        time.sleep(0.15)

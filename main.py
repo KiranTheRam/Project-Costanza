@@ -39,7 +39,7 @@ while True:
         print(val)
         # print(val, time.time())
         # If a hand is detected within range
-        if val < 250:
+        if val <= 200:
             current_track = sp.current_playback()
             if current_track is not None and current_track['is_playing']:
                 print("Pause")
@@ -50,3 +50,20 @@ while True:
             else:
                 print("No device is currently playing. Start playback on any device")
             time.sleep(0.15)
+        elif 200 < val <= 300:
+            current_track = sp.current_playback()
+            if current_track is not None and current_track['is_playing']:
+                print("Skipping track")
+                sp.next_track()
+            else:
+                print("No device is currently playing. Start playback on any device")
+            time.sleep(0.15)
+        elif 305 < val <= 400:
+            current_track = sp.current_playback()
+            if current_track is not None and current_track['is_playing']:
+                print("Previous track")
+                sp.previous_track()
+            else:
+                print("No device is currently playing. Start playback on any device")
+            time.sleep(0.15)
+

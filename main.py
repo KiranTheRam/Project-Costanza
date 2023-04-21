@@ -13,7 +13,7 @@ def sensor_val():
 
 
 # Open the serial port
-ser = serial.Serial('\\\\.\\COM10', 115200, timeout=0.15)
+ser = serial.Serial('\\\\.\\COM3', 115200, timeout=0.15)
 
 # Set up configparser
 config = configparser.ConfigParser()
@@ -42,7 +42,11 @@ while True:
         if val < 250:
             current_track = sp.current_playback()
             if current_track is not None and current_track['is_playing']:
+                print("Pause")
                 sp.pause_playback()
-            else:
+            elif current_track is not None:
+                print("Play")
                 sp.start_playback()
-            time.sleep(10)
+            else:
+                print("No device is currently playing. Start playback on any device")
+            time.sleep(0.15)
